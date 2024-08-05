@@ -1,11 +1,12 @@
 //import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'Activity_Page/activity_page.dart';
-import 'Home_Page/home_page.dart';
-import 'Match_Page/match_page.dart';
-import 'ProfilePage/profile_page.dart';
+import 'pages/Activity_Page/activity_page.dart';
+import 'pages/Home_Page/home_page.dart';
+import 'pages/Match_Page/match_page.dart';
+import 'pages/ProfilePage/profile_page.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -32,7 +33,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
     // 计算 BottomNavigationBar 的高度（10% 的屏幕高度）
-    final double bottomNavBarHeight = screenHeight * 0.12;
+    final double bottomNavBarHeight = 85.h;
     return Scaffold(
       body: Center(
         child: _pages.elementAt(_selectedIndex),
@@ -40,12 +41,9 @@ class _MainPageState extends State<MainPage> {
       bottomNavigationBar: Container(
         width: double.infinity, // 确保宽度填充整个屏幕
         height: bottomNavBarHeight, // 设置高度为屏幕高度的 10%
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 41, 97, 153),
-              Color.fromARGB(255, 16, 38, 64)
-            ],
+            colors: [Color(0xff286199), Color(0xff0a1526)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -55,80 +53,13 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(25),
             topRight: Radius.circular(25),
           ),
           child: BottomNavigationBar(
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Padding(
-                  padding:
-                      EdgeInsets.only(bottom: screenHeight * 0.01), // 向上移动按钮
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Image.asset(
-                        _selectedIndex == 0
-                            ? 'assets/image/navigation/light/Home.png'
-                            : 'assets/image/navigation/filled/Home.png',
-                        width: screenHeight * 0.035,
-                        height: screenHeight * 0.035,
-                        fit: BoxFit.contain,
-                      ),
-                      // SizedBox(height: screenHeight*0.005), // 调整图标和文字之间的距离
-                    ],
-                  ),
-                ),
-                label: '首页',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.search),
-                label: '活动',
-              ),
-              BottomNavigationBarItem(
-                icon: Padding(
-                  padding:
-                      EdgeInsets.only(bottom: screenHeight * 0.01), // 向上移动按钮
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Image.asset(
-                        _selectedIndex == 2
-                            ? 'assets/image/navigation/light/Cart.png'
-                            : 'assets/image/navigation/filled/Cart-1.png',
-                        width: screenHeight * 0.035,
-                        height: screenHeight * 0.035,
-                        fit: BoxFit.contain,
-                      ),
-                      // SizedBox(height: screenHeight*0.005), // 调整图标和文字之间的距离
-                    ],
-                  ),
-                ),
-                label: '比赛',
-              ),
-              BottomNavigationBarItem(
-                icon: Padding(
-                  padding:
-                      EdgeInsets.only(bottom: screenHeight * 0.01), // 向上移动按钮
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Image.asset(
-                        _selectedIndex == 3
-                            ? 'assets/image/navigation/light/User.png'
-                            : 'assets/image/navigation/filled/User.png',
-                        width: screenHeight * 0.035,
-                        height: screenHeight * 0.035,
-                        fit: BoxFit.contain,
-                      ),
-                      // SizedBox(height: screenHeight*0.005), // 调整图标和文字之间的距离
-                    ],
-                  ),
-                ),
-                label: '我的',
-              ),
-            ],
+            items: List.generate(
+                4, (index) => _buildBottomNavigationBarItem(index)),
             currentIndex: _selectedIndex,
             selectedItemColor: Color.fromARGB(255, 255, 255, 255),
             unselectedItemColor: Color.fromARGB(255, 111, 122, 135),
@@ -139,6 +70,43 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
       ),
+    );
+  }
+
+  BottomNavigationBarItem _buildBottomNavigationBarItem(int index) {
+    List<String> lightIcons = [
+      'assets/image/navigation/light/Home.png',
+      'assets/image/navigation/light/Activity.png',
+      'assets/image/navigation/light/Cart.png',
+      'assets/image/navigation/light/User.png',
+    ];
+
+    List<String> filledIcons = [
+      'assets/image/navigation/filled/Home.png',
+      'assets/image/navigation/filled/Activity.png',
+      'assets/image/navigation/filled/Cart.png',
+      'assets/image/navigation/filled/User.png',
+    ];
+
+    List<String> labels = ['首页', '活动', '比赛', '我的'];
+
+    return BottomNavigationBarItem(
+      icon: Padding(
+        padding: EdgeInsets.only(bottom: 8.h), // 向上移动按钮
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Image.asset(
+              _selectedIndex == index ? lightIcons[index] : filledIcons[index],
+              width: 24.w,
+              height: 24.h,
+              fit: BoxFit.contain,
+            ),
+            // SizedBox(height: screenHeight*0.005), // 调整图标和文字之间的距离
+          ],
+        ),
+      ),
+      label: labels[index],
     );
   }
 }
